@@ -1,8 +1,9 @@
 const { Schema, model } = require("mongoose");
-const assignmentSchema = require("./User");
+const reactionSchema = require("./Reaction");
+const dayjs = require("dayjs");
 
 // Schema to create Student model
-const studentSchema = new Schema(
+const thoughtSchema = new Schema(
   {
     thoughtText: {
       type: String,
@@ -13,24 +14,30 @@ const studentSchema = new Schema(
     createdAt: {
       type: Date,
       default: Date.now(),
-      //Set default value to the current timestamp
+      get: (createdAtVal) =>
+        dayjs(createdAtVal).format("MM DD, YYYY [at] hh:mm a"),
       //Use a getter method to format the timestamp on query
     },
     username: {
       type: String,
       required: true,
     },
-    reactions: {
-      //Array of nested documents created with the reactionSchema (These are like replies)
-    },
+    reactions: [reactionSchema],
+    //Array of nested documents created with the reactionSchema (These are like replies)
   },
   {
     toJSON: {
+      virtuals: true,
       getters: true,
     },
+    id: false,
   }
 );
 
-const Student = model("student", studentSchema);
+thoughtSchema.virtual("reactionCount").get(function () {
+  return this.reactions.length;
+});
 
-module.exports = Student;
+const Thought = model("thought", thoughtSchema);
+
+module.exports = Thought;

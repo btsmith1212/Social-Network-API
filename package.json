@@ -2,15 +2,13 @@
   "name": "social-network-api",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "license": "MIT",
   "scripts": {
-    "start": "node index",
-    "dev": "nodemon index",
-    "seed": "node utils/seed",
-    "heroku-postbuild": "node utils/seed.js"
+    "start": "node server.js"
   },
   "dependencies": {
+    "dayjs": "^1.11.10",
     "express": "^4.17.1",
     "mongoose": "^7.0.2"
   },

@@ -1,16 +1,17 @@
 const { Schema, model } = require("mongoose");
-
-// Schema to create a course model
+const dayjs = require('dayjs');
+// Schema to create a reaction model
 // (SCHEMA ONLY)
-const courseSchema = new Schema(
+const reactionSchema = new Schema(
   {
     reactionID: {
-      //Use Mongoose's ObjectId data type
-      //Default value is set to a new ObjectId
+      type: Schema.Types.ObjectId,
+      default: () => new Types.ObjectId(),
     },
     reactionBody: {
-      type: Boolean,
-      default: true,
+      type: String,
+      required: true,
+      max_length: 280,
     },
     username: {
       type: String,
@@ -19,14 +20,10 @@ const courseSchema = new Schema(
     createdAt: {
       type: Date,
       default: Date.now(),
+      get: (createdAtVal) =>
+        dayjs(createdAtVal).format("MM DD, YYYY [at] hh:mm a"),
       //Use a getter method to format the timestamp on query
     },
-    students: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Student",
-      },
-    ],
   },
   {
     toJSON: {
@@ -36,6 +33,4 @@ const courseSchema = new Schema(
   }
 );
 
-const Course = model("course", courseSchema);
-
-module.exports = Course;
+module.exports = reactionSchema;
